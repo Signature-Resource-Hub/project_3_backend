@@ -13,10 +13,12 @@ mongoose
 console.log("DB CONNECTED");
 });
 //Middlewares
+app.use(express.json())
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
 app.use('/api',userRoutes);
+
 //PORT
 const port = process.env.PORT || 8000;
 //Starting a server
