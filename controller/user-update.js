@@ -1,6 +1,7 @@
 const User = require("../model/user");
 const bcrypt = require("bcryptjs"); // Import bcryptjs for password hashing
 const { use } = require("../routes/user-update");
+const mongoose =require ("mongoose")
 
 //forgot  password
 exports.forgotPassword = (req, res) => {
@@ -88,74 +89,75 @@ exports.updateUser = (req, res) => {
 
 // Update email
 exports.updateEmail = (req, res) => {
-  const { email, newEmail } = req.body;
+  const { userId, email, newEmail } = req.body;
   // Validate email
   if (!email || !isValidEmail(email)) {
-    return res.status(400).json({ msg: "Invalid email" });
+      return res.status(400).json({ msg: "Invalid email" });
   }
   // Validate newEmail
   if (!newEmail || !isValidEmail(newEmail)) {
-    return res.status(400).json({ msg: "Invalid new email" });
+      return res.status(400).json({ msg: "Invalid new email" });
   }
   // Update email in the database
-  User.findOneAndUpdate({ email }, { email: newEmail }, { new: true })
-    .then((user) => {
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        console.log("User not found for update. Email:", email);
-        return res
-          .status(404)
-          .json({ msg: "User not found for update", email: email });
-      }
-    })
-    .catch((error) => {
-      console.error("Error updating email:", error);
-      return res
-        .status(500)
-        .json({ msg: "Failed to update email", error: error.message });
-    });
+  User.findOneAndUpdate({ _id: userId }, { email: newEmail }, { new: true })
+      .then((user) => {
+          if (user) {
+              res.status(200).json(user);
+          } else {
+              console.log("User not found for update. User ID:", userId);
+              return res
+                  .status(404)
+                  .json({ msg: "User not found for update", userId: userId });
+          }
+      })
+      .catch((error) => {
+          console.error("Error updating email:", error);
+          return res
+              .status(500)
+              .json({ msg: "Failed to update email", error: error.message });
+      });
 };
 
 // Update phone number
 exports.updatePhone = (req, res) => {
-  const { email, phone } = req.body;
+  const { userId, email, phone } = req.body;
   // Validate email
   if (!email || !isValidEmail(email)) {
-    return res.status(400).json({ msg: "Invalid email" });
+      return res.status(400).json({ msg: "Invalid email" });
   }
   console.log("Phone number provided:", phone);
   // Ensure phone is not empty and convert to number
   const phoneNumber = parseInt(phone);
   if (
-    !phoneNumber ||
-    isNaN(phoneNumber) ||
-    phoneNumber.toString().length !== 10
+      !phoneNumber ||
+      isNaN(phoneNumber) ||
+      phoneNumber.toString().length !== 10
   ) {
-    console.log("Invalid phone number:", phoneNumber);
-    return res.status(400).json({ msg: "Invalid phone number" });
+      console.log("Invalid phone number:", phoneNumber);
+      return res.status(400).json({ msg: "Invalid phone number" });
   }
   console.log("Valid phone number:", phoneNumber);
   // Update phone number in the database
-  User.findOneAndUpdate({ email }, { phone: phoneNumber }, { new: true })
-    .then((user) => {
-      if (user) {
-        console.log("User updated successfully:", user);
-        res.status(200).json(user);
-      } else {
-        console.log("User not found for update. Email:", email);
-        return res
-          .status(404)
-          .json({ msg: "User not found for update", email: email });
-      }
-    })
-    .catch((error) => {
-      console.error("Error updating phone:", error);
-      return res
-        .status(500)
-        .json({ msg: "Server Error", error: error.message });
-    });
+  User.findOneAndUpdate({ _id: userId }, { phone: phoneNumber }, { new: true })
+      .then((user) => {
+          if (user) {
+              console.log("User updated successfully:", user);
+              res.status(200).json(user);
+          } else {
+              console.log("User not found for update. User ID:", userId);
+              return res
+                  .status(404)
+                  .json({ msg: "User not found for update", userId: userId });
+          }
+      })
+      .catch((error) => {
+          console.error("Error updating phone:", error);
+          return res
+              .status(500)
+              .json({ msg: "Server Error", error: error.message });
+      });
 };
+
 
 // Helper function to validate email format
 function isValidEmail(email) {
@@ -204,3 +206,18 @@ exports.updatePassword = async (req, res) => {
     res.status(500).json({ msg: "Server Error", error: err.message });
   }
 };
+
+
+exports.getUser=(req,res)=>{
+  User.findOne({_id:req.body.userId}).then((user)=>{
+      if (user) {
+          res.status(200).json(user);
+      }
+      else {
+          return res.status(400).json({ 'msg': "Internal error" });
+      }
+  });
+}
+
+
+

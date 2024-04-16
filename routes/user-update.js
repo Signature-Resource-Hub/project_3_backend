@@ -6,6 +6,7 @@ router.post('/updateuser', userController.updateUser);
 router.post('/updateEmail',userController.updateEmail);
 router.post('/updatePhone',userController.updatePhone);
 router.post('/updatePass',userController.updatePassword);
+router.post('/getUser',userController.getUser);
 
 module.exports = router;
 
