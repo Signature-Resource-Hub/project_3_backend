@@ -1,5 +1,5 @@
 const {validationResult}= require('express-validator')
-const SubCategoryModel = require('../models/subCategory');
+const SubCategoryModel = require('../model/subCategory');
 
 
 

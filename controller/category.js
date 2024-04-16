@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const CategoryModel = require('../models/category');
+const CategoryModel = require('../model/category');
 
 // Controller function to create a new category
 exports.createCategory = async (req, res) => {

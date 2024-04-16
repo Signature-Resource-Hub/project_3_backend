@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
-const Service = require('../models/Services'); // Importing the Service model from model.js
+const Service = require('../model/Services'); // Importing the Service model from model.js
 
 // Controller function to register a new service
 exports.registerService = async (req, res) => {

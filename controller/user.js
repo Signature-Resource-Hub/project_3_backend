@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-const User = require("../models/Person");
+const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
