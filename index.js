@@ -1,5 +1,9 @@
 require("dotenv").config();
 var userRoutes=require('./routes/user');
+var categoryRoutes=require('./routes/category');
+var subCategoryRoutes=require('./routes/subCategory');
+var serviceRoute=require('./routes/services');
+ 
 const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
@@ -18,6 +22,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
 app.use('/api',userRoutes);
+app.use('/api',categoryRoutes);
+app.use('/api',subCategoryRoutes);
+app.use('/api',serviceRoute);
 
 //PORT
 const port = process.env.PORT || 8000;

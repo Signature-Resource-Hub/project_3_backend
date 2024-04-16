@@ -23,7 +23,7 @@ const PersonSchema = new mongoose.Schema({
   user_type: {
     type: String,
     default: "user",
-  },
+  }
 });
 const PersonModel = mongoose.model("person", PersonSchema);
 module.exports = PersonModel;
