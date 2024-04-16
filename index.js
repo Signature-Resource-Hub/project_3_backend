@@ -1,4 +1,7 @@
 require("dotenv").config();
+var userUpdateRoutes=require('./routes/user-update');
+var propertyRoutes=require('./routes/properties')
+var jobRoutes = require('./routes/job')
 var userRoutes=require('./routes/user');
 const mongoose = require("mongoose");
 const express = require("express");
@@ -16,7 +19,10 @@ console.log("DB CONNECTED");
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
+app.use('/api',userUpdateRoutes);
 app.use('/api',userRoutes);
+app.use('/api',propertyRoutes);
+app.use('/api',jobRoutes);
 //PORT
 const port = process.env.PORT || 8000;
 //Starting a server

@@ -1,7 +1,8 @@
 const { validationResult } = require("express-validator");
-const User = require("../models/Person");
+const User = require("../model/user");
 var jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 exports.registerUser = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -35,6 +36,7 @@ exports.registerUser = (req, res) => {
     }
   });
 };
+
 exports.loginUser = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -64,6 +66,7 @@ exports.loginUser = (req, res) => {
             if (err) {
               throw err;
             }
+            res.cookie("token", token, { expire: new Date() + 9999 });
             res.json({
               token,
               user: {
@@ -74,7 +77,6 @@ exports.loginUser = (req, res) => {
             });
           }
         );
-        res.cookie("token", token, { expire: new Date() + 9999 });
       });
     })
     .catch((err) => res.status(500).json({ msg: "Internal Server Error" }));
