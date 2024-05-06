@@ -6,6 +6,8 @@ var userRoutes=require('./routes/user');
 var categoryRoutes=require('./routes/category');
 var subCategoryRoutes=require('./routes/subCategory');
 var serviceRoute=require('./routes/services');
+var contactRoutes=require('./routes/contact')
+
  
 const mongoose = require("mongoose");
 const express = require("express");
@@ -19,6 +21,16 @@ mongoose
 .then(() => {
 console.log("DB CONNECTED");
 });
+
+
+// app.use((req, res, next) => {
+//     req.path = req.path.trim(); // Trim the request path
+//     console.log(`Received a request: ${req.method} ${req.path}`);
+//     next(); // Proceed to the next middleware or route handler
+// });
+
+
+
 //Middlewares
 app.use(express.json())
 app.use(bodyParser.json());
@@ -29,6 +41,9 @@ app.use('/api',userRoutes);
 app.use('/api',categoryRoutes);
 app.use('/api',subCategoryRoutes);
 app.use('/api',serviceRoute);
+app.use('/api', contactRoutes);
+
+
 
 app.use('/api',propertyRoutes);
 app.use('/api',jobRoutes);

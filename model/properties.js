@@ -60,6 +60,10 @@ const PropertySchema = new Schema({
     type: String,
     required: true
   },
+  bhk: {
+    type: String,
+    required: true
+  },
   description: {
     type: String,
     required: true

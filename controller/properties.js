@@ -1,13 +1,13 @@
 const PropertiesModel = require('../model/properties');
 
 exports.registerProperties = (req, res) => {
-    let { userId, price, description, phone, email, whatsapp, location, property_type } = req.body;
+    let { userId, price,bhk, description, phone, email, whatsapp, location, property_type } = req.body;
 
     // Trim userId to remove leading and trailing spaces
     userId = userId.trim();
 
     // Check if any field is empty
-    if (!userId || !price || !description || !phone || !email || !whatsapp || !location || !property_type) {
+    if (!userId || !price ||! bhk || !description || !phone || !email || !whatsapp || !location || !property_type) {
         return res.status(400).json({ error: "Please fill all the fields" });
     }
 
@@ -25,6 +25,7 @@ exports.registerProperties = (req, res) => {
     const newProperty = new PropertiesModel({
         user_id: userId, // Include user ID here
         price: price,
+        bhk:bhk,
         description: description,
         phone: phone,
         email: email,
@@ -47,12 +48,12 @@ exports.registerProperties = (req, res) => {
 exports.updateProperty = async (req, res) => {
     try {
         // Extract id from request body
-        const { userId, id, email, phone, whatsapp, price, description, property_type, location } = req.body;
+        const { userId, id, email, phone, whatsapp, price,bhk, description, property_type, location } = req.body;
         const updates = req.body;
         const options = { new: true };
 
         // Check if any update fields are empty
-        if (!email && !phone && !whatsapp && !price && !description && !property_type && !location) {
+        if (!email && !phone && !whatsapp && !price && !description &&!bhk && !property_type && !location) {
             return res.status(400).json({ status: "error", msg: "At least one field for update is required" });
         }
 
@@ -143,8 +144,27 @@ exports.getPropertyById = async (req, res) => {
 };
 
 
+
+
+
 // Controller function to view all properties
 // Controller function to view all properties
+// exports.getAllProperties = async (req, res) => {
+//     try {
+//         // Find all properties including the image field
+//         const properties = await PropertiesModel.find({}, 'user_id price description phone email whatsapp location property_type image');
+
+//         if (!properties || properties.length === 0) {
+//             return res.status(404).json({ status: "error", msg: "No properties found" });
+//         }
+
+//         return res.status(200).json({ status: "success", properties: properties });
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({ status: "error", msg: "Internal Server Error" });
+//     }
+// };
+
 exports.getAllProperties = async (req, res) => {
     try {
         // Find all properties including the image field
@@ -160,6 +180,7 @@ exports.getAllProperties = async (req, res) => {
         return res.status(500).json({ status: "error", msg: "Internal Server Error" });
     }
 };
+
 
 
 exports.getRentProperties = async (req, res) => {
