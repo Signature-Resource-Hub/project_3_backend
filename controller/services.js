@@ -90,10 +90,25 @@ exports.deleteService = async (req, res) => {
 };
 
 
+// // Controller function to get services by category ID
+// exports.getServicesByCategoryId = async (req, res) => {
+//   try {
+//     const { categoryId } = req.body;
+
+//     // Find all services with the specified category ID
+//     const services = await Service.find({ Category: categoryId });
+
+//     // Return the services
+//     return res.status(200).json({ status: 'success', services });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ status: 'error', msg: 'Internal Server Error' });
+//   }
+// };
 // Controller function to get services by category ID
 exports.getServicesByCategoryId = async (req, res) => {
   try {
-    const { categoryId } = req.body;
+    const { categoryId } = req.params; // Update from req.body to req.params
 
     // Find all services with the specified category ID
     const services = await Service.find({ Category: categoryId });
@@ -105,6 +120,7 @@ exports.getServicesByCategoryId = async (req, res) => {
     return res.status(500).json({ status: 'error', msg: 'Internal Server Error' });
   }
 };
+
 
 // Controller function to get services by service IDs
 exports.getServicesByServiceIds = async (req, res) => {
@@ -121,3 +137,35 @@ exports.getServicesByServiceIds = async (req, res) => {
     return res.status(500).json({ status: 'error', msg: 'Internal Server Error' });
   }
 };
+// Controller function to get all services
+exports.getAllServices = async (req, res) => {
+  try {
+    // Retrieve all services from the database
+    const services = await Service.find();
+
+    // Return the services in the response
+    return res.status(200).json({ status: 'success', services });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: 'error', msg: 'Internal Server Error' });
+  }
+};
+
+// Controller function to get household services by category ID
+exports.getHouseholdServicesByCategoryId = async (req, res) => {
+  try {
+    const { categoryId } = req.params; // Access category ID from URL parameter
+
+    // Find all household services with the specified category ID
+    const householdServices = await Service.find({ Category: categoryId });
+
+    // Return the household services
+    return res.status(200).json({ status: 'success', householdServices });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: 'error', msg: 'Internal Server Error' });
+  }
+};
+
+
+

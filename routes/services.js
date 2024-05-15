@@ -28,5 +28,11 @@ router.post('/services/ids', [
   // Validation middleware for request body fields
   body('serviceIds').isArray({ min: 1 }).withMessage('Service IDs must be an array with at least one ID'),
 ], serviceController.getServicesByServiceIds);
+// Route to get all services (POST request)
+router.get('/allservices', serviceController.getAllServices);
+
+// Define the route for getting household services by category ID
+router.get('/household-services/:categoryId', serviceController.getHouseholdServicesByCategoryId);
+
 
 module.exports = router;
