@@ -4,7 +4,7 @@ const ServiceSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'person', // Assuming your user model is named 'Person'
-    required: true
+    // required: true
   },
   title: {
     type: String,
@@ -37,7 +37,7 @@ const ServiceSchema = new mongoose.Schema({
   SubCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'subCategory',
-    required: true
+    required: false
   }
 });
 

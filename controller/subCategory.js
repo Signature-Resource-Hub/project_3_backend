@@ -44,5 +44,23 @@ exports.getAllSubCategories = async (req, res) => {
     return res.status(500).json({ status: 'error', msg: 'Internal Server Error' });
   }
 };
+// Controller function to retrieve subcategories by category ID
+exports.getSubcategoriesByCategoryIdFromBody = async (req, res) => {
+  try {
+    const { _id } = req.body;
+
+    // Find all subcategories under the specified category ID
+    const subcategories = await SubCategoryModel.find({ Category: _id });
+
+    if (subcategories.length === 0) {
+      return res.status(404).json({ status: 'error', msg: 'No subcategories found for the specified category ID' });
+    }
+
+    return res.status(200).json({ status: 'success', subcategories });
+  } catch (error) {
+    console.error('Error retrieving subcategories by category ID:', error);
+    return res.status(500).json({ status: 'error', msg: 'Internal Server Error' });
+  }
+};
 
 // Other subcategory-related controller functions...
