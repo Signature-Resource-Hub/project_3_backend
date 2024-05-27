@@ -19,13 +19,18 @@ const PersonSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: String,
+    required: true,
   },
   user_type: {
     type: String,
     default: "user",
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'verified'],
+    default: 'pending'
   }
 });
 
-const PersonModel = mongoose.model("person", PersonSchema);
+const PersonModel = mongoose.model("Person", PersonSchema);
 module.exports = PersonModel;

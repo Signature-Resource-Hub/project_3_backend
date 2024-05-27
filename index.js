@@ -6,7 +6,7 @@ var userRoutes=require('./routes/user');
 var categoryRoutes=require('./routes/category');
 var subCategoryRoutes=require('./routes/subCategory');
 var serviceRoute=require('./routes/services');
-var contactRoutes=require('./routes/contact')
+var contactRoutes=require('./routes/contact');
 
  
 const mongoose = require("mongoose");

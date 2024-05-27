@@ -12,10 +12,9 @@ const ServiceSchema = new mongoose.Schema({
     maxlength: 52,
   },
   picture: {
-    type: String,
-    trim: true,
-    required: true,
-    unique: true,
+    data: Buffer, // Use Buffer type to store binary data
+    contentType: String, // Use String type to store content type (e.g., 'image/png', 'image/jpeg')
+    
   },
   phone: {
     type: Number,

@@ -3,6 +3,40 @@ const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+exports.verifyOtpAndRegisterUser = async (req, res) => {
+  console.log('Request body:', req.body);
+  const { otp, userData } = req.body;
+  
+  // Hardcoded OTP for demonstration
+  const correctOtp = '1234';
+  
+  if (otp !== correctOtp) {
+    return res.status(400).json({ status: "error", msg: "Invalid OTP" });
+  }
+  
+  try {
+    // Check if user exists
+    const existingUser = await User.findOne({ email: userData.email });
+    if (!existingUser) {
+      return res.status(400).json({ status: "error", msg: "User not found" });
+    }
+
+    // Check if user is already verified
+    if (existingUser.status === 'verified') {
+      return res.status(400).json({ status: "error", msg: "The user already exists" });
+    }
+    
+    // Update user status to verified
+    existingUser.status = 'verified';
+    await existingUser.save();
+
+    return res.status(200).json({ status: "success", user: existingUser });
+  } catch (error) {
+    console.error('Error during user verification:', error);
+    return res.status(500).json({ status: "error", msg: "Internal Server Error" });
+  }
+};
+
 exports.registerUser = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -11,24 +45,29 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ status: "error", msg: errorMessages.join(" and ") });
     }
 
-    const existingUser = await User.findOne({ email: req.body.email });
+    const { name, email, phone, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ status: "error", msg: "The user already exists" });
     }
 
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ ...req.body, password: hashedPassword });
+    const newUser = new User({ name, email, phone, password: hashedPassword, status: 'pending' });
     const user = await newUser.save();
 
-    return res.status(201).json({ status: "success", user });
+    // Respond with pending status for OTP verification
+    return res.status(201).json({ status: "pending", userData: { name, email, phone, password } });
   } catch (error) {
-    console.error(error);
+    console.error('Error during user registration:', error);
     return res.status(500).json({ status: "error", msg: "Internal Server Error" });
   }
 };
+
+
 
 exports.loginUser = async (req, res) => {
   try {
