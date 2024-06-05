@@ -19,7 +19,7 @@ const PersonSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
   },
   user_type: {
     type: String,
@@ -27,9 +27,9 @@ const PersonSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'verified'],
-    default: 'pending'
-  }
+    enum: ["pending", "verified"],
+    default: "pending",
+  },
 });
 
 const PersonModel = mongoose.model("Person", PersonSchema);
