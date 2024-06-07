@@ -68,9 +68,9 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ status: "error", msg: errorMessages.join(" and ") });
     }
 
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password ,status} = req.body;
 
-    if (!name || !email || !phone || !password) {
+    if (!name || !email || !phone ) {
       return res.status(400).json({ status: "error", msg: "Please enter all required fields" });
     }
 

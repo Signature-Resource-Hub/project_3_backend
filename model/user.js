@@ -27,7 +27,7 @@ const PersonSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "verified"],
+    enum: ["pending", "verified","approved"],
     default: "pending",
   },
 });
