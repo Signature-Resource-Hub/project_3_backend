@@ -3,7 +3,64 @@ const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+
+exports.verifyOtpAndRegisterUser = async (req, res) => {
+  console.log('Request body:', req.body);
+  const { otp, userData } = req.body;
+  
+  // Hardcoded OTP for demonstration
+  const correctOtp = '1234';
+  
+  if (otp !== correctOtp) {
+    return res.status(400).json({ status: "error", msg: "Invalid OTP" });
+  }
+  
+  try {
+    const existingUser = await User.findOne({ email: userData.email });
+    if (!existingUser) {
+      return res.status(400).json({ status: "error", msg: "User not found" });
+    }
+  
+    existingUser.status = 'verified'; // Update status to 'verified'
+    await existingUser.save();
+  
+    return res.status(200).json({ status: "success", msg: "User verified successfully" });
+  } catch (error) {
+    console.error('Error verifying user:', error);
+    return res.status(500).json({ status: "error", msg: "Internal Server Error" });
+  }
+};
+exports.setPassword = async (req, res) => {
+  const { password, userData } = req.body;
+
+  try {
+    const user = await User.findOne({ email: userData.email });
+    if (!user) {
+      return res.status(400).json({ status: "error", msg: "User not found" });
+    }
+
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+    user.status = 'verified';
+    await user.save();
+
+    return res.status(200).json({ status: "success", msg: "Password set successfully" });
+  } catch (error) {
+    console.error('Error setting password:', error);
+    return res.status(500).json({ status: "error", msg: "Internal Server Error" });
+  }
+};
+
+
+let temporaryUserStore = {}; // In-memory store for demonstration
+
+
+
 exports.registerUser = async (req, res) => {
+  console.log('Request body:', req.body); // Log the request body
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -11,25 +68,36 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ status: "error", msg: errorMessages.join(" and ") });
     }
 
-    const existingUser = await User.findOne({ email: req.body.email });
+    const { name, email, phone, password ,status} = req.body;
+
+    if (!name || !email || !phone ) {
+      return res.status(400).json({ status: "error", msg: "Please enter all required fields" });
+    }
+
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ status: "error", msg: "The user already exists" });
     }
-
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ ...req.body, password: hashedPassword });
-    const user = await newUser.save();
+    req.body.password = hashedPassword;
+    req.body.status="approved"
+    let newUser=User(req.body)
 
-    return res.status(201).json({ status: "success", user });
+    await newUser.save().then((data) => {
+      if (data) {
+        return res.status(201).json({ status: "approved", msg: "User registered successfully", data });
+      } else {
+        return res.status(400).json({ status: "error", msg: "Error Occurred" });
+      }
+    });
   } catch (error) {
-    console.error(error);
+    console.error('Error during user registration:', error);
     return res.status(500).json({ status: "error", msg: "Internal Server Error" });
   }
 };
-
 exports.loginUser = async (req, res) => {
   try {
     const errors = validationResult(req);
